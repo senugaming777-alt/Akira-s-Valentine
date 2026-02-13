@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For My Wifey ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+    /* GENERAL STYLES */
+    body, html {
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        color: #fff;
+        display: flex; justify-content: center; align-items: center;
+        text-align: center;
+    }
+
+    /* FLOATING SPARKLES */
+    .sparkle {
+        position: absolute;
+        width: 5px; height: 5px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 50%;
+        animation: floatUp 5s linear infinite;
+        pointer-events: none;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(100vh) scale(0); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+
+    /* SCENES */
+    .scene {
+        display: none;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        width: 90%; max-width: 400px;
+        flex-direction: column; align-items: center; justify-content: center;
+    }
+    .active { display: flex; opacity: 1; }
+
+    /* BUTTONS */
+    button {
+        background: #fff; color: #ff758c;
+        border: none; padding: 12px 25px;
+        font-size: 16px; border-radius: 30px;
+        font-weight: 600; cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+        margin-top: 20px;
+    }
+    button:active { transform: scale(0.95); }
+
+    /* SCENE 1: ENVELOPE */
+    #night-bg {
+        background: radial-gradient(circle, #2b32b2 0%, #1488cc 100%);
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1; display: none;
+    }
+    .envelope-container { font-size: 80px; transition: transform 0.5s; }
+    .shake { animation: shake 0.5s; }
+    @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+    .letter { 
+        background: #fff; color: #333; padding: 20px; 
+        border-radius: 10px; margin-top: 10px; display: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    /* SCENE 2: PHOTO */
+    .memory-img {
+        width: 100%; border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        margin: 20px 0; border: 5px solid #fff;
+    }
+
+    /* SCENE 3: CHOICES */
+    .choice-btn { margin: 10px; width: 80%; display: block; }
+    .popup {
+        background: rgba(255,255,255,0.95); color: #ff758c;
+        padding: 20px; border-radius: 15px;
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        width: 80%; z-index: 100;
+    }
+    .popup.show { transform: translate(-50%, -50%) scale(1); }
+
+    /* SCENE 4: CODE */
+    .code-input {
+        display: flex; gap: 10px; justify-content: center;
+    }
+    .code-input input {
+        width: 40px; height: 50px; font-size: 24px;
+        text-align: center; border: none; border-radius: 10px;
+        outline: none; color: #ff758c;
+    }
+    .heart-confetti {
+        position: fixed; top: -10%; color: #ff4d6d;
+        font-size: 24px; animation: fall linear forwards;
+    }
+    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+    /* MUSIC CONTROL */
+    #music-control {
+        position: fixed; top: 20px; right: 20px;
+        background: rgba(255,255,255,0.5); padding: 10px;
+        border-radius: 50%; cursor: pointer; z-index: 1000;
+    }
+</style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+    <div id="music-control">🔇</div>
+    <div id="sparkle-container"></div>
+
+    <div id="night-bg"></div>
+    <div id="scene1" class="scene active">
+        <div style="font-size: 50px;">🧸✉️</div>
+        <h2>Someone has been waiting for you...</h2>
+        <button onclick="knock()" id="knock-btn">Knock</button>
+        <button onclick="openEnvelope()" id="open-btn" style="display:none;">Open</button>
+        
+        <div class="envelope-container" id="envelope">✉️</div>
+        
+        <div class="letter" id="letter">
+            <p>Happy Valentine’s day, wifey. I love you sooo much muahhh 😚❤️</p>
+            <button onclick="nextScene(2)">Continue</button>
+        </div>
+    </div>
+
+    <div id="scene2" class="scene">
+        <h2>Still remember this? 😝❤️</h2>
+        <img src="https://i.ibb.co/MkxThWsb/ec230d91-df33-45c5-be90-134acbb2fd6a.jpg" class="memory-img" alt="Memory">
+        <button onclick="nextScene(3)">Next</button>
+    </div>
+
+    <div id="scene3" class="scene">
+        <h2>Choose what describes me</h2>
+        <button class="choice-btn" onclick="showPopup('Overthinker')">Overthinker</button>
+        <button class="choice-btn" onclick="showPopup('Annoying')">Annoying</button>
+        <button class="choice-btn" onclick="showPopup('Sweet')">Sweet</button>
+    </div>
+
+    <div id="popup" class="popup">
+        <p id="popup-text"></p>
+        <button onclick="closePopup()">Continue</button>
+    </div>
+
+    <div id="scene4" class="scene">
+        <h2 style="color: #fff;">Enter the secret code</h2>
+        <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
+        <div class="code-input">
+            <input type="tel" maxlength="1" oninput="moveFocus(this, 1)">
+            <input type="tel" maxlength="1" oninput="moveFocus(this, 2)">
+            <input type="tel" maxlength="1" oninput="moveFocus(this, 3)">
+            <input type="tel" maxlength="1" oninput="checkCode(this)">
+        </div>
+    </div>
+
+    <div id="scene5" class="scene">
+        <h1 style="text-shadow: 0 0 10px #fff;">I love you sooo much wifeyy ❤️</h1>
+        <p>Once again, Happy Valentine’s day</p>
+        <div style="font-size: 60px; animation: pulse 1s infinite;">💖</div>
+    </div>
+
+<script>
+    // SPARKLES
+    setInterval(() => {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = Math.random() * 100 + 'vw';
+        sparkle.style.animationDuration = Math.random() * 3 + 2 + 's';
+        document.getElementById('sparkle-container').appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 5000);
+    }, 300);
+
+    // MUSIC
+    const audio = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-control');
+    let musicStarted = false;
+
+    document.body.addEventListener('click', () => {
+        if (!musicStarted) {
+            audio.play();
+            musicStarted = true;
+            musicBtn.innerText = "🔊";
+        }
+    });
+
+    musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (audio.paused) {
+            audio.play();
+            musicBtn.innerText = "🔊";
+        } else {
+            audio.pause();
+            musicBtn.innerText = "🔇";
+        }
+    });
+
+    // NAVIGATION
+    function nextScene(n) {
+        document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+        document.getElementById('scene' + n).classList.add('active');
+        if(n === 1) {
+            document.getElementById('night-bg').style.display = 'block';
+        } else {
+            document.getElementById('night-bg').style.display = 'none';
+        }
+    }
+
+    // SCENE 1 ACTIONS
+    function knock() {
+        const env = document.getElementById('envelope');
+        env.classList.add('shake');
+        setTimeout(() => {
+            env.classList.remove('shake');
+            document.getElementById('knock-btn').style.display = 'none';
+            document.getElementById('open-btn').style.display = 'inline-block';
+        }, 500);
+    }
+
+    function openEnvelope() {
+        document.getElementById('envelope').style.display = 'none';
+        document.getElementById('open-btn').style.display = 'none';
+        document.getElementById('letter').style.display = 'block';
+    }
+
+    // SCENE 3 POPUPS
+    function showPopup(type) {
+        const text = document.getElementById('popup-text');
+        if (type === 'Overthinker') text.innerText = "I overthink that’s why I have a big forehead 😭❤️";
+        if (type === 'Annoying') text.innerText = "Blahhh, Annoying you is my love language 😝❤️";
+        if (type === 'Sweet') text.innerText = "if I’m sweet why don’t you eat me Mommy? 😝❤️";
+        
+        document.getElementById('popup').classList.add('show');
+    }
+
+    function closePopup() {
+        document.getElementById('popup').classList.remove('show');
+        nextScene(4);
+    }
+
+    // SCENE 4 CODE
+    function moveFocus(current, nextIndex) {
+        if(current.value.length === 1) {
+            document.querySelectorAll('.code-input input')[nextIndex].focus();
+        }
+    }
+
+    function checkCode(lastInput) {
+        const inputs = document.querySelectorAll('.code-input input');
+        let code = "";
+        inputs.forEach(input => code += input.value);
+        
+        if (code === "3108") {
+            inputs.forEach(i => i.blur());
+            document.body.style.background = "#000";
+            startConfetti();
+            setTimeout(() => nextScene(5), 1000);
+        } else if (code.length === 4) {
+            document.querySelector('.code-input').classList.add('shake');
+            setTimeout(() => {
+                document.querySelector('.code-input').classList.remove('shake');
+                inputs.forEach(i => i.value = "");
+                inputs[0].focus();
+            }, 500);
+        }
+    }
+
+    function startConfetti() {
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-confetti');
+            heart.innerText = "❤️";
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+        }, 100);
+    }
+</script>
+</body>
+</html>
